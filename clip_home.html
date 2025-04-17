@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Page Interactor</title>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      width: 380px; /* Slightly wider for better display */
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+      padding: 15px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 5px;
+    }
+    label, input, button, textarea {
+      display: block;
+      margin-bottom: 10px; /* Increased spacing */
+      width: 100%;
+      box-sizing: border-box; /* Include padding and border in width */
+    }
+    input[type="text"], textarea {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    textarea {
+      min-height: 70px; /* Slightly taller */
+      resize: vertical; /* Allow vertical resize */
+    }
+    button {
+      padding: 8px 12px;
+      border: 1px solid #666;
+      background-color: #f0f0f0;
+      color: #333;
+      border-radius: 4px;
+      cursor: pointer;
+      text-align: center;
+      font-weight: 500;
+    }
+    button:hover {
+      background-color: #e0e0e0;
+      border-color: #555;
+    }
+    button:active {
+      background-color: #d0d0d0;
+    }
+    hr {
+      margin: 20px 0;
+      border: 0;
+      border-top: 1px solid #eee;
+    }
+    /* Status messages */
+    #status, #cookieStatus {
+      margin-top: 10px;
+      font-style: italic;
+      color: #555; /* Neutral default color */
+      font-size: 0.9em;
+      padding: 5px;
+      border-radius: 3px;
+      word-wrap: break-word;
+    }
+    #status.error, #cookieStatus.error {
+      color: #D8000C; /* Red for errors */
+      background-color: #FFD2D2;
+    }
+     #status.success, #cookieStatus.success {
+      color: #270; /* Green for success */
+      background-color: #DFF2BF;
+    }
+
+    /* Cookie display area */
+    pre#cookieDisplay {
+        white-space: pre-wrap;       /* CSS3 */
+        white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+        white-space: -pre-wrap;      /* Opera 4-6 */
+        white-space: -o-pre-wrap;    /* Opera 7 */
+        word-wrap: break-word;       /* Internet Explorer 5.5+ */
+        background-color: #f9f9f9;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        max-height: 200px; /* Limit height and make scrollable */
+        overflow-y: auto;
+        font-size: 0.85em;
+        line-height: 1.4;
+     }
+  </style>
+</head>
+<body>
+
+  <h3>Page LocalStorage</h3>
+  <label for="keyInput">Key:</label>
+  <input type="text" id="keyInput" placeholder="Enter localStorage key">
+  <label for="valueInput">Value:</label>
+  <textarea id="valueInput" placeholder="Enter value to set / View retrieved value"></textarea>
+  <div style="display: flex; gap: 10px;"> <button id="getKey" style="flex: 1;">Get LS Value</button>
+      <button id="setKey" style="flex: 1;">Set LS Value</button>
+  </div>
+   <div style="display: flex; gap: 10px;"> <button id="removeKey" style="flex: 1;">Remove LS Key</button>
+      <button id="clearAll" style="flex: 1;">Clear All LS</button>
+  </div>
+  <div id="status">LocalStorage status updates appear here.</div>
+
+  <hr>
+
+  <h3>Page Cookies</h3>
+  <div style="display: flex; gap: 10px;"> <button id="getApiCookies" style="flex: 1;">Get Cookies (API - Incl. HttpOnly)</button>
+    <button id="getDocCookies" style="flex: 1;">Get Cookies (document.cookie)</button>
+  </div>
+  <pre id="cookieDisplay">(Cookie data will appear here)</pre>
+  <div id="cookieStatus">Cookie status updates appear here.</div>
+
+  <script src="clip_home.js"></script>
+</body>
+</html>
