@@ -85,3 +85,5 @@ if (typeof window.pageInteractorContentScriptInjected === 'undefined') {
     // This can happen if executeScript is called again on the same frame before page reload.
     console.log("Page Interactor Content Script already injected.");
   }
+
+  
