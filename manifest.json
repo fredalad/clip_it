@@ -1,14 +1,30 @@
 {
   "manifest_version": 3,
   "name": "Mariano's Coupon Button",
-  "version": "1.0",
-  "description": "Injects a button into Mariano's coupon page",
-  "permissions": ["scripting"],
+  "version": "1.1",
+  "description": "Injects a button and redirects coupon API calls.",
+  "permissions": [
+    "scripting",
+    "declarativeNetRequest",
+    "declarativeNetRequestWithHostAccess"
+  ],
+  "host_permissions": [
+    "https://www.marianos.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
   "content_scripts": [
     {
       "matches": ["https://www.marianos.com/savings/cl/coupons/"],
-      "js": ["content.js"]
+      "js": ["content.js"],
+      "run_at": "document_start"
     }
-  ]
-  
+  ],
+  "web_accessible_resources": [
+  {
+    "resources": ["inject-xhr.js"],
+    "matches": ["<all_urls>"]
+  }
+]
 }
