@@ -67,13 +67,13 @@ if (typeof window.pageInteractorContentScriptInjected === 'undefined') {
               const coupons = await window.parseCoupons();
               const cookies = await window.grabCookie();
               const builtHeader = await window.buildHeaderFromCookie(cookies);
-              // const clipResponse = await window.sendClipRequest(coupons, cookies, builtHeader);
+              const clipResponse = await window.sendClipRequest(coupons, builtHeader);
 
               responseData = {
                 coupons,
                 cookies,
                 builtHeader,
-
+                clipResponse
               };
 
               console.log("Content Script: Safeway flow complete:", responseData);
