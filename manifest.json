@@ -1,19 +1,33 @@
 {
-    "manifest_version": 3,
-    "name": "ReturnOfTheClippy",
-    "version": "0.1.0",
-    "description": "Clippin Coupons to ReCoup Dollars.",
-    "action": {
-        "default_popup": "clip_home.html",
-        "default_icon": "coupon-icon.png"
-    },
-    "permissions": [
-        "activeTab", 
-        "scripting", 
-        "storage",
-        "cookies"
+  "manifest_version": 3,
+  "name": "ReturnOfTheClippy",
+  "version": "0.1.0",
+  "description": "Clippin Coupons to ReCoup Dollars.",
+  "host_permissions": [
+    "https://www.safeway.com/*"
+  ],
+  "action": {
+    "default_popup": "clip_home.html",
+    "default_icon": "coupon-icon.png"
+  },
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "cookies"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
       ],
-      "background": {
-        "service_worker": "background.js"
-      }
+      "js": [
+        "albertsons/safeway.js",
+        "content.js"
+      ]
+    }
+  ]
 }

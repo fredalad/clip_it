@@ -59,8 +59,35 @@ if (typeof window.pageInteractorContentScriptInjected === 'undefined') {
           // Directly access the page's non-HttpOnly cookies visible to JavaScript
           responseData = document.cookie;
           console.log(`Content Script: document.cookie value: ${responseData}`);
+        } else if (request.action === "trySafeway") {
+          console.log("Content Script: trySafeway action triggered.");
+
+          (async () => {
+            try {
+              const coupons = await window.parseCoupons();
+              const cookies = await window.grabCookie();
+              const builtHeader = await window.buildHeaderFromCookie(cookies);
+              // const clipResponse = await window.sendClipRequest(coupons, cookies, builtHeader);
+
+              responseData = {
+                coupons,
+                cookies,
+                builtHeader,
+
+              };
+
+              console.log("Content Script: Safeway flow complete:", responseData);
+              sendResponse({ data: responseData, error: null });
+            } catch (e) {
+              error = `trySafeway Error: ${e.message}`;
+              console.error(error);
+              sendResponse({ data: null, error });
+            }
+          })();
+
+          return true; // Keep the message channel open for async
         }
-  
+
         // == Unknown Action ==
         else {
           error = `Content Script Error: Unknown action requested: ${request.action}`;
