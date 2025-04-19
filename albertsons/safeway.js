@@ -61,6 +61,9 @@ const cookieCompositionNames = [
     "visid_incap_1610353"
 ];
 
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+
 window.navigateToSafewayCoupons = async function (){
     const targetURL = "https://www.safeway.com/foru/coupons-deals.html";
     chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
@@ -75,6 +78,7 @@ window.parseCoupons = async function (){
     let storedCouponDataString = window.localStorage.getItem('abJ4uCoupons');
     let storedCouponData = JSON.parse(storedCouponDataString);
     console.log(`storedCouponData = ${storedCouponData}`);
+    let unclippedCoupons = {}
     let unclippedCouponKeys = [];
     console.log(typeof storedCouponData);
     try {
@@ -83,12 +87,15 @@ window.parseCoupons = async function (){
 
         // Use filter to create a new array with keys not in arrClippedCoupons
         unclippedCouponKeys = objCouponsKeys.filter(key => !arrClippedCoupons.includes(key));
+        unclippedCouponKeys.map((couponKey, index) => {
+          unclippedCoupons[couponKey] = storedCouponData.objCoupons[couponKey];
+        });
     } catch (error) {
         console.error("Error while filtering unclipped coupons:", error);
         // Optionally handle fallback logic here
     }
-
-    return unclippedCouponKeys;
+    console.log(`unclippedCoupons => ${JSON.stringify(unclippedCoupons)} `);
+    return unclippedCoupons;
 }
 
 window.grabCookie = async function (){
@@ -141,23 +148,23 @@ window.buildHeaderFromCookie = async function (cookieObj){
     return headers;
 }
 
-window.sendClipRequest = async function (couponList, builtHeader){
+window.sendClipRequest = async function (couponObj, builtHeader){
     let storedCouponDataString = window.localStorage.getItem('abJ4uCoupons');
     let storedCouponData = JSON.parse(storedCouponDataString);
     let storeId = storedCouponData.storeId;
     let clipUrl = `https://www.safeway.com/abs/pub/web/j4u/api/offers/clip?storeId=${storeId}`;
-    const bodyObjects = couponList.map(id => ({
+    const bodyObjects = Object.entries(couponObj).map(([id, coupon]) => ({
         items: [
-            { clipType: "C", itemId: id, itemType: "PD" },
-            { clipType: "L", itemId: id, itemType: "PD" }
+            { clipType: "C", itemId: id, itemType: coupon.offerPgm },
+            { clipType: "L", itemId: id, itemType: coupon.offerPgm }
         ]
     }));
     console.log(`bodyObjects => ${JSON.stringify(bodyObjects)}`);
-    bodyObjects.forEach((obj, index) => {
-        console.log(`clipping coupon number ${index} - with ID: ${obj.itemId}`);
-        if (index > 2){
-            // don't do anything beyond 2
-            return;
+    for (const [index, obj] of bodyObjects.entries()) {
+        console.log(`clipping coupon number ${index} - for this item object: ${JSON.stringify(obj)}`);
+        if ((index + 1) % 5 === 0) {
+            console.log(`Pausing after ${index + 1} items...`);
+            await sleep(1000); // 1 second pause
         }
         fetch(clipUrl, {
             method: 'POST',
@@ -176,5 +183,5 @@ window.sendClipRequest = async function (couponList, builtHeader){
             .catch(error => {
                 console.error(`Error with object #${index + 1}:`, error);
             });
-    });
+    }
 }
