@@ -38,44 +38,73 @@ function injectButton() {
   // On click: ask background for headers and fire the fetch
   btn.addEventListener('click', () => {
     console.log("📩 Requesting headers from background...");
-
+  
     chrome.runtime.sendMessage("getCouponHeaders", (headerArray) => {
       if (!headerArray || headerArray.length === 0) {
         console.error("❌ No headers returned");
         alert("Couldn't fetch headers.");
         return;
       }
-
+  
       const headers = {};
       for (const h of headerArray) {
-        if (!["user-agent", "cookie", "referer"].includes(h.name.toLowerCase())) {
+        const name = h.name.toLowerCase();
+        if (!["user-agent", "cookie", "referer"].includes(name)) {
           headers[h.name] = h.value;
         }
       }
-
+  
       console.log("✅ Using headers:", headers);
-
-      fetch("https://www.marianos.com/atlas/v1/savings-coupons/v1/coupons?projections=coupons.compact&filter.status=unclipped&filter.status=active", {
+  
+      fetch("https://www.marianos.com/atlas/v1/savings-coupons/v1/coupons?projections=coupons.compact&filter.status=unclipped&page.size=1", {
         method: 'GET',
         credentials: 'include',
         headers: headers
       })
         .then(res => res.json())
-        .then(data => {
-          console.log("🧾 Response:", data);
-          const capturedCoupons = data.coupons || [];
-
+        .then(resData => {
+          console.log("🧾 Full response:", resData);
+          const capturedCoupons = resData.data?.coupons || [];
+          
           if (capturedCoupons.length === 0) {
             alert("⚠️ No coupons found.");
             return;
           }
+  
+          console.log("🚀 Clipping coupons by ID...");
+          const unclippedCoupons = capturedCoupons.filter(c => c.status === "unclipped");
 
-          console.log("🚀 Clipping these coupons:");
-          capturedCoupons.forEach(coupon => {
-            console.log("📎", coupon.offerTitle || coupon.displayDescription);
+          unclippedCoupons.forEach(coupon => {
+          
+            const body = JSON.stringify({
+              action: "CLIP",
+              couponId: coupon.id
+            });
+  
+            const clipHeaders = {
+              ...headers,
+              "Content-Type": "application/json"
+            };
+  
+            fetch("https://www.marianos.com/atlas/v1/savings-coupons/v1/clip-unclip", {
+              method: 'POST',
+              credentials: 'include',
+              headers: clipHeaders,
+              body: body
+            })
+              .then(res => {
+                if (res.ok) {
+                  console.log(`✅ Clipped: ${coupon.offerTitle || coupon.displayDescription}`);
+                } else {
+                  console.warn(`❌ Failed to clip ${coupon.id}`, res.status);
+                }
+              })
+              .catch(err => {
+                console.error(`❌ Error clipping ${coupon.id}`, err);
+              });
           });
-
-          alert(`✅ Ready to clip ${capturedCoupons.length} coupons`);
+  
+          alert(`🚀 Attempted to clip ${capturedCoupons.length} coupons`);
         })
         .catch(err => {
           console.error("❌ Failed to fetch coupons", err);
@@ -84,6 +113,7 @@ function injectButton() {
     });
   });
 }
+  
 
 
 // Wait for DOM to be ready and inject the button
