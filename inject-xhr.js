@@ -3,7 +3,7 @@
   console.log("✅ XHR interception script loaded from file");
 
   XMLHttpRequest.prototype.open = function (method, url, ...rest) {
-    console.log("📡 XHR opened:", url);
+    // console.log("📡 XHR opened:", url);
 
     if (url.includes('/coupons')) {
       this.addEventListener('load', function () {

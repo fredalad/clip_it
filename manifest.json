@@ -2,11 +2,9 @@
   "manifest_version": 3,
   "name": "Mariano's Coupon Button",
   "version": "1.1",
-  "description": "Injects a button and redirects coupon API calls.",
+  "description": "Injects a button and logs coupon API requests.",
   "permissions": [
-    "scripting",
-    "declarativeNetRequest",
-    "declarativeNetRequestWithHostAccess"
+    "webRequest"
   ],
   "host_permissions": [
     "https://www.marianos.com/*"
@@ -22,9 +20,9 @@
     }
   ],
   "web_accessible_resources": [
-  {
-    "resources": ["inject-xhr.js"],
-    "matches": ["<all_urls>"]
-  }
-]
+    {
+      "resources": ["inject-xhr.js"],
+      "matches": ["<all_urls>"]
+    }
+  ]
 }
