@@ -38,14 +38,14 @@ function injectButton() {
   // On click: ask background for headers and fire the fetch
   btn.addEventListener('click', () => {
     console.log("📩 Requesting headers from background...");
-  
+
     chrome.runtime.sendMessage("getCouponHeaders", (headerArray) => {
       if (!headerArray || headerArray.length === 0) {
         console.error("❌ No headers returned");
         alert("Couldn't fetch headers.");
         return;
       }
-  
+
       const headers = {};
       for (const h of headerArray) {
         const name = h.name.toLowerCase();
@@ -53,10 +53,10 @@ function injectButton() {
           headers[h.name] = h.value;
         }
       }
-  
+
       console.log("✅ Using headers:", headers);
-  
-      fetch("https://www.marianos.com/atlas/v1/savings-coupons/v1/coupons?projections=coupons.compact&filter.status=unclipped&page.size=1", {
+
+      fetch("https://www.marianos.com/atlas/v1/savings-coupons/v1/coupons?projections=coupons.compact&filter.status=unclipped", {
         method: 'GET',
         credentials: 'include',
         headers: headers
@@ -65,27 +65,27 @@ function injectButton() {
         .then(resData => {
           console.log("🧾 Full response:", resData);
           const capturedCoupons = resData.data?.coupons || [];
-          
+
           if (capturedCoupons.length === 0) {
             alert("⚠️ No coupons found.");
             return;
           }
-  
+
           console.log("🚀 Clipping coupons by ID...");
           const unclippedCoupons = capturedCoupons.filter(c => c.status === "unclipped");
 
           unclippedCoupons.forEach(coupon => {
-          
+
             const body = JSON.stringify({
               action: "CLIP",
               couponId: coupon.id
             });
-  
+
             const clipHeaders = {
               ...headers,
               "Content-Type": "application/json"
             };
-  
+
             fetch("https://www.marianos.com/atlas/v1/savings-coupons/v1/clip-unclip", {
               method: 'POST',
               credentials: 'include',
@@ -103,7 +103,7 @@ function injectButton() {
                 console.error(`❌ Error clipping ${coupon.id}`, err);
               });
           });
-  
+
           alert(`🚀 Attempted to clip ${capturedCoupons.length} coupons`);
         })
         .catch(err => {
@@ -113,7 +113,7 @@ function injectButton() {
     });
   });
 }
-  
+
 
 
 // Wait for DOM to be ready and inject the button
