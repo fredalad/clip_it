@@ -86,6 +86,36 @@ if (typeof window.pageInteractorContentScriptInjected === 'undefined') {
           })();
 
           return true; // Keep the message channel open for async
+        } else if (request.action === "tryJewel") {
+          console.log("Content Script: trySafeway action triggered.");
+
+          (async () => {
+            try {
+              const coupons = await window.parseCoupons();
+              const cookies = await window.grabCookie();
+              let additionalCookies = null;
+              additionalCookies = await window.grabAdditionalCookieFieldsToAddToCookieObjJewel(cookies);
+              console.log("Additional cookie results:", additionalCookies);
+              const builtHeader = await window.buildJewelOscoHeaderFromCookie(cookies, additionalCookies);
+              const clipResponse = await window.sendClipRequest(coupons, builtHeader);
+
+              responseData = {
+                coupons,
+                cookies,
+                builtHeader,
+                clipResponse
+              };
+
+              console.log("Content Script: Safeway flow complete:", responseData);
+              sendResponse({ data: responseData, error: null });
+            } catch (e) {
+              error = `trySafeway Error: ${e.message}`;
+              console.error(error);
+              sendResponse({ data: null, error });
+            }
+          })();
+
+          return true; // Keep the message channel open for async
         }
 
         // == Unknown Action ==

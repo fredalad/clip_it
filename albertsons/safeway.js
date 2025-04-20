@@ -1,11 +1,11 @@
 /*
 flow: 
-- user navigates to: https://www.safeway.com/foru/coupons-deals.html
-- abJ4uCoupons key is populated in storage -- populated at objCoupons at coupon deals page
-- cookie already exists and will be pulled at time of request
-- loop over object keys and send API request
-- background job api request to clip
-- exit and inform user
+- user navigates to: https://www.safeway.com/foru/coupons-deals.html [not working]
+- grab abJ4uCoupons key that is populated in storage - populated at objCoupons at coupon deals page [done]
+- pull cookie already exists and will be pulled at time of request [done]
+- loop over object keys and send API request [done]
+- async api request to clip [done]
+- exit and inform user (TODO)
 */
 const headers = {
     'accept': 'application/json, text/plain, */*',
@@ -99,12 +99,6 @@ window.parseCoupons = async function (){
 }
 
 window.grabCookie = async function (){
-    // chrome.runtime.sendMessage({ type: 'getCookies' }, (response) => {
-    //     console.log('*** grabCookie -> Cookies:', response);
-    //     let cookies = response.data
-    //     console.log(`*** cookies keys => ${cookies.keys()}`)
-    //     // Do whatever you want with cookies here
-    // });
     console.log(`cookie -> ${document.cookie}`)
     cookieStr = document.cookie
     const cookieObj = {};

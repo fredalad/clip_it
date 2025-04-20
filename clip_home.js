@@ -213,5 +213,9 @@ document.addEventListener('DOMContentLoaded', () => {
       cookieDisplay.textContent = 'Running Safeway Test...'; // Show loading state
       sendMessageToContentScript('trySafeway', null); // Send request to content script
     });
-  
+  document.getElementById('tryJewel')?.addEventListener('click', () => {
+      cookieDisplay.textContent = 'Running Jewel Osco Test...'; // Show loading state
+      sendMessageToContentScript('tryJewel', null); // Send request to content script
+    });
+
   }); // End DOMContentLoaded listener

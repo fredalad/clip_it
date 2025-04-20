@@ -3,8 +3,7 @@
   "name": "ReturnOfTheClippy",
   "version": "0.1.0",
   "description": "Clippin Coupons to ReCoup Dollars.",
-  "host_permissions": [
-    "https://www.safeway.com/*"
+  "host_permissions": ["<all_urls>"
   ],
   "action": {
     "default_popup": "clip_home.html",
@@ -26,6 +25,7 @@
       ],
       "js": [
         "albertsons/safeway.js",
+        "albertsons/jewel.js",
         "content.js"
       ]
     }

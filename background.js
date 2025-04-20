@@ -2,10 +2,11 @@
  * Listener for messages sent from other parts of the extension (e.g., popup).
  * Handles requests that need background capabilities, like accessing the chrome.cookies API.
  */
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     // Log the received message for debugging
     console.log("Background Service Worker received message:", request, "from sender:", sender);
-  
+
     // Handle the specific action 'getCookies'
     if (request.action === "getCookies") {
   
@@ -22,12 +23,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       }
   
       // Get the URL of the tab that sent the message. This is the URL for which we want cookies.
-      const targetUrl = sender.tab.url;
+      const url =  new URL(sender.tab.url);
+      const targetUrl = url.hostname;
       console.log(`Background: Requesting cookies via chrome.cookies.getAll for URL: ${targetUrl}`);
   
       // Call the chrome.cookies API.
       // This requires the "cookies" permission and relevant "host_permissions" in manifest.json.
-      chrome.cookies.getAll({ url: targetUrl }, (cookies) => {
+      chrome.cookies.getAll({ domain: targetUrl }, (cookies) => {
         // This is an asynchronous callback function.
   
         // Check for errors during the API call (e.g., permission denied).
