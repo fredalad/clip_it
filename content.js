@@ -69,7 +69,7 @@ function injectButton() {
             alert("⚠️ No coupons found.");
             return;
           }
-
+          // TODO: Grabbed clipped total off screen DOM and let user know max is 200 and add filtering
           const unclippedCoupons = capturedCoupons.filter(c => c.status === "unclipped").slice(0, 200);
           updateStatusBox(`🚀 Starting to clip ${unclippedCoupons.length} coupons...`);
           throttleClipping(unclippedCoupons, headers);
