@@ -7,18 +7,22 @@
     "webRequest"
   ],
   "host_permissions": [
-    "https://www.marianos.com/*"
+    "https://www.marianos.com/*",
+    "https://www.kingsoopers.com/*"
   ],
   "background": {
     "service_worker": "background.js"
   },
   "content_scripts": [
-    {
-      "matches": ["https://www.marianos.com/savings/cl/coupons/"],
-      "js": ["content.js"],
-      "run_at": "document_start"
-    }
-  ],
+  {
+    "matches": [
+      "https://www.marianos.com/savings/cl/coupons/",
+      "https://www.kingsoopers.com/savings/cl/mycoupons/"
+    ],
+    "js": ["config.js", "content.js"],
+    "run_at": "document_idle"
+  }
+],
   "web_accessible_resources": [
     {
       "resources": ["inject-xhr.js"],
