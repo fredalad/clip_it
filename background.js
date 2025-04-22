@@ -6,7 +6,24 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
       latestCouponHeaders = details.requestHeaders;
     }
   },
-  { urls: ["https://www.marianos.com/*"] },
+  { urls: [
+    "https://www.kroger.com/*",
+    "https://www.ralphs.com/*",
+    "https://www.dillons.com/*",
+    "https://www.smithsfoodanddrug.com/*",
+    "https://www.kingsoopers.com/*",
+    "https://www.frysfood.com/*",
+    "https://www.qfc.com/*",
+    "https://www.citymarket.com/*",
+    "https://www.jaycfoods.com/*",
+    "https://www.pay-less.com/*",
+    "https://www.bakersplus.com/*",
+    "https://www.gerbes.com/*",
+    "https://www.harristeeter.com/*",
+    "https://www.picknsave.com/*",
+    "https://www.metromarket.net/*",
+    "https://www.marianos.com/*"
+  ] },
   ["requestHeaders"]
 );
 

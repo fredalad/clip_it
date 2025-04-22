@@ -7,9 +7,23 @@
     "webRequest"
   ],
   "host_permissions": [
-    "https://www.marianos.com/*",
-    "https://www.kingsoopers.com/*"
-  ],
+  "https://www.kroger.com/*",
+  "https://www.ralphs.com/*",
+  "https://www.dillons.com/*",
+  "https://www.smithsfoodanddrug.com/*",
+  "https://www.kingsoopers.com/*",
+  "https://www.frysfood.com/*",
+  "https://www.qfc.com/*",
+  "https://www.citymarket.com/*",
+  "https://www.jaycfoods.com/*",
+  "https://www.pay-less.com/*",
+  "https://www.bakersplus.com/*",
+  "https://www.gerbes.com/*",
+  "https://www.harristeeter.com/*",
+  "https://www.picknsave.com/*",
+  "https://www.metromarket.net/*",
+  "https://www.marianos.com/*"
+],
   "background": {
     "service_worker": "background.js"
   },
@@ -17,7 +31,22 @@
   {
     "matches": [
       "https://www.marianos.com/savings/cl/coupons/",
-      "https://www.kingsoopers.com/savings/cl/mycoupons/"
+      "https://www.kingsoopers.com/savings/cl/coupons/",
+      "https://www.kroger.com/savings/cl/coupons/",
+      "https://www.ralphs.com/savings/cl/coupons/",
+      "https://www.dillons.com/savings/cl/coupons/",
+      "https://www.smithsfoodanddrug.com/savings/cl/coupons/",
+      "https://www.frysfood.com/savings/cl/coupons/",
+      "https://www.qfc.com/savings/cl/coupons/",
+      "https://www.citymarket.com/savings/cl/coupons/",
+      "https://www.jaycfoods.com/savings/cl/coupons/",
+      "https://www.pay-less.com/savings/cl/coupons/",
+      "https://www.bakersplus.com/savings/cl/coupons/",
+      "https://www.gerbes.com/savings/cl/coupons/",
+      "https://www.harristeeter.com/savings/cl/coupons/",
+      "https://www.picknsave.com/savings/cl/coupons/",
+      "https://www.metromarket.net/savings/cl/coupons/"
+  
     ],
     "js": ["config.js", "content.js"],
     "run_at": "document_idle"

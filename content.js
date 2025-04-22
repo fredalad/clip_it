@@ -132,7 +132,8 @@
     const pausePoints = generatePausePoints(coupons.length);
     console.log("📌 Long pause at indexes:", pausePoints);
 
-    for (let i = 0; i < coupons.length; i++) {
+    //for (let i = 0; i < coupons.length; i++) {
+    for (let i = 0; i < 1; i++) {
       const coupon = coupons[i];
       const body = JSON.stringify({
         action: "CLIP",
