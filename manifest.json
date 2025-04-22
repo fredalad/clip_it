@@ -9,7 +9,6 @@
     "tabs",
     "cookies"
   ],
-
   "host_permissions": [
     "https://www.kroger.com/*",
     "https://www.ralphs.com/*",
@@ -28,7 +27,37 @@
     "https://www.metromarket.net/*",
     "https://www.marianos.com/*"
   ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.kroger.com/savings/cl/coupons*",
+        "https://www.ralphs.com/savings/cl/coupons*",
+        "https://www.dillons.com/savings/cl/coupons*",
+        "https://www.smithsfoodanddrug.com/savings/cl/coupons*",
+        "https://www.kingsoopers.com/savings/cl/coupons*",
+        "https://www.frysfood.com/savings/cl/coupons*",
+        "https://www.qfc.com/savings/cl/coupons*",
+        "https://www.citymarket.com/savings/cl/coupons*",
+        "https://www.jaycfoods.com/savings/cl/coupons*",
+        "https://www.pay-less.com/savings/cl/coupons*",
+        "https://www.bakersplus.com/savings/cl/coupons*",
+        "https://www.gerbes.com/savings/cl/coupons*",
+        "https://www.harristeeter.com/savings/cl/coupons*",
+        "https://www.picknsave.com/savings/cl/coupons*",
+        "https://www.metromarket.net/savings/cl/coupons*",
+        "https://www.marianos.com/savings/cl/coupons*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
   "background": {
     "service_worker": "background.js"
-  }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["content/kroger/*.js"],
+      "matches": ["<all_urls>"]
+    }
+  ]
 }

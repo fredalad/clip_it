@@ -31,12 +31,6 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
       chrome.scripting.executeScript({
         target: { tabId },
-        files: ["config.js"],
-        world: "ISOLATED"
-      });
-
-      chrome.scripting.executeScript({
-        target: { tabId },
         files: ["content.js"],
         world: "ISOLATED"
       });

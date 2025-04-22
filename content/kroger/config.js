@@ -84,9 +84,8 @@ window.SITE_CONFIG = {
     apiBase: "https://www.marianos.com",
     xpath: "/html/body/div[1]/div/div[8]/div[1]/main/section/div/section[2]"
   }
-}
-;
-
-window.getSiteConfig = function () {
-  return window.SITE_CONFIG[window.location.hostname];
 };
+
+export function getSiteConfig() {
+  return SITE_CONFIG[window.location.hostname];
+}
