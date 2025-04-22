@@ -5,17 +5,8 @@
       console.warn("❗ Unsupported site");
       return;
     }
-
-    injectXHRInterceptor();
+    
     observeAndInjectButton(config);
-  }
-
-  // --- Inject XHR monkey-patch ---
-  function injectXHRInterceptor() {
-    const script = document.createElement('script');
-    script.src = chrome.runtime.getURL('inject-xhr.js');
-    script.onload = () => script.remove();
-    (document.head || document.documentElement).appendChild(script);
   }
 
   // --- Inject status box ---
@@ -113,7 +104,7 @@
               return;
             }
     
-            const unclippedCoupons = capturedCoupons.filter(c => c.status === "unclipped").slice(0, 200);
+            const unclippedCoupons = capturedCoupons.filter(c => c.status === "unclipped").slice(0, 1);
             updateStatusBox(`🚀 Starting to clip ${unclippedCoupons.length} coupons (max 200)...`);
             throttleClipping(unclippedCoupons, headers, config);
           })
