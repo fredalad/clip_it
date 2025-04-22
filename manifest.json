@@ -1,19 +1,63 @@
 {
-    "manifest_version": 3,
-    "name": "ReturnOfTheClippy",
-    "version": "0.1.0",
-    "description": "Clippin Coupons to ReCoup Dollars.",
-    "action": {
-        "default_popup": "clip_home.html",
-        "default_icon": "coupon-icon.png"
-    },
-    "permissions": [
-        "activeTab", 
-        "scripting", 
-        "storage",
-        "cookies"
+  "manifest_version": 3,
+  "name": "Mariano's Coupon Button",
+  "version": "1.1",
+  "description": "Injects a button and logs coupon API requests.",
+  "permissions": [
+    "webRequest",
+    "scripting",
+    "tabs",
+    "cookies"
+  ],
+  "host_permissions": [
+    "https://www.kroger.com/*",
+    "https://www.ralphs.com/*",
+    "https://www.dillons.com/*",
+    "https://www.smithsfoodanddrug.com/*",
+    "https://www.kingsoopers.com/*",
+    "https://www.frysfood.com/*",
+    "https://www.qfc.com/*",
+    "https://www.citymarket.com/*",
+    "https://www.jaycfoods.com/*",
+    "https://www.pay-less.com/*",
+    "https://www.bakersplus.com/*",
+    "https://www.gerbes.com/*",
+    "https://www.harristeeter.com/*",
+    "https://www.picknsave.com/*",
+    "https://www.metromarket.net/*",
+    "https://www.marianos.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.kroger.com/savings/cl/coupons*",
+        "https://www.ralphs.com/savings/cl/coupons*",
+        "https://www.dillons.com/savings/cl/coupons*",
+        "https://www.smithsfoodanddrug.com/savings/cl/coupons*",
+        "https://www.kingsoopers.com/savings/cl/coupons*",
+        "https://www.frysfood.com/savings/cl/coupons*",
+        "https://www.qfc.com/savings/cl/coupons*",
+        "https://www.citymarket.com/savings/cl/coupons*",
+        "https://www.jaycfoods.com/savings/cl/coupons*",
+        "https://www.pay-less.com/savings/cl/coupons*",
+        "https://www.bakersplus.com/savings/cl/coupons*",
+        "https://www.gerbes.com/savings/cl/coupons*",
+        "https://www.harristeeter.com/savings/cl/coupons*",
+        "https://www.picknsave.com/savings/cl/coupons*",
+        "https://www.metromarket.net/savings/cl/coupons*",
+        "https://www.marianos.com/savings/cl/coupons*"
       ],
-      "background": {
-        "service_worker": "background.js"
-      }
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["content/kroger/*.js"],
+      "matches": ["<all_urls>"]
+    }
+  ]
 }
