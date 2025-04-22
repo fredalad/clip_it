@@ -1,36 +1,92 @@
-let latestCouponHeaders = [];
+const couponSites = [
+  "marianos.com",
+  "kroger.com",
+  "kingsoopers.com",
+  "ralphs.com",
+  "dillons.com",
+  "smithsfoodanddrug.com",
+  "frysfood.com",
+  "qfc.com",
+  "citymarket.com",
+  "jaycfoods.com",
+  "pay-less.com",
+  "bakersplus.com",
+  "gerbes.com",
+  "harristeeter.com",
+  "picknsave.com",
+  "metromarket.net"
+];
 
-chrome.webRequest.onBeforeSendHeaders.addListener(
-  function (details) {
-    if (details.url.includes("/atlas/v1/savings-coupons/v1/coupons")) {
-      latestCouponHeaders = details.requestHeaders;
+const headerStore = {}; // Store captured headers per tabId
+
+// 🔁 Inject scripts when a supported coupon page loads
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  if (changeInfo.status === "complete" && tab.url) {
+    const isCouponPage = couponSites.some(site =>
+      tab.url.includes(site) && tab.url.includes("/savings/cl/coupons")
+    );
+
+    if (isCouponPage) {
+      console.log("💡 Injecting scripts into:", tab.url);
+
+      chrome.scripting.executeScript({
+        target: { tabId },
+        files: ["config.js"],
+        world: "ISOLATED"
+      });
+
+      chrome.scripting.executeScript({
+        target: { tabId },
+        files: ["content.js"],
+        world: "ISOLATED"
+      });
     }
+  }
+});
+
+// 🕵️ Capture real headers when browser hits coupon API
+chrome.webRequest.onBeforeSendHeaders.addListener(
+  (details) => {
+    const { tabId, requestHeaders, url } = details;
+
+    if (
+      url.includes("/atlas/v1/savings-coupons/v1/coupons") &&
+      tabId >= 0
+    ) {
+      headerStore[tabId] = requestHeaders;
+      console.log("📦 Stored headers for tab", tabId);
+    }
+
+    return {};
   },
-  { urls: [
-    "https://www.kroger.com/*",
-    "https://www.ralphs.com/*",
-    "https://www.dillons.com/*",
-    "https://www.smithsfoodanddrug.com/*",
-    "https://www.kingsoopers.com/*",
-    "https://www.frysfood.com/*",
-    "https://www.qfc.com/*",
-    "https://www.citymarket.com/*",
-    "https://www.jaycfoods.com/*",
-    "https://www.pay-less.com/*",
-    "https://www.bakersplus.com/*",
-    "https://www.gerbes.com/*",
-    "https://www.harristeeter.com/*",
-    "https://www.picknsave.com/*",
-    "https://www.metromarket.net/*",
-    "https://www.marianos.com/*"
-  ] },
+  {
+    urls: ["<all_urls>"],
+    types: ["xmlhttprequest"]
+  },
   ["requestHeaders"]
 );
 
-// Allow content script to ask for headers
+// 📬 Handle content script requesting those headers
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message === "getCouponHeaders") {
-    sendResponse(latestCouponHeaders);
-    return true; // required for async response
+    const tabId = sender.tab?.id;
+    const rawHeaders = headerStore[tabId];
+
+    if (!rawHeaders) {
+      console.warn("⚠️ No stored headers yet for tab", tabId);
+      sendResponse({ headers: null });
+      return;
+    }
+
+    const headersObj = {};
+    for (const h of rawHeaders) {
+      const name = h.name.toLowerCase();
+      if (!["cookie", "user-agent"].includes(name)) {
+        headersObj[h.name] = h.value;
+      }
+    }
+
+    sendResponse({ headers: headersObj });
+    return true; // Keep response channel open for async
   }
 });
