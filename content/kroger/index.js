@@ -51,7 +51,7 @@ export function run() {
     }
     return points;
   }
-
+  // TODO: Make button a drop down by type (food, cleaning, tools, etc...)
   function injectButton(config) {
     const targetSection = document.evaluate(
       config.xpath,
@@ -89,9 +89,7 @@ export function run() {
           ...response.headers,
           "Content-Type": "application/json"
         };
-
-        console.log("✅ Using headers:", headers);
-
+        
         fetch(`${config.apiBase}/atlas/v1/savings-coupons/v1/coupons?projections=coupons.compact&filter.status=unclipped&filter.status=active`, {
           method: 'GET',
           credentials: 'include',
@@ -99,7 +97,6 @@ export function run() {
         })
           .then(res => res.json())
           .then(resData => {
-            console.log("🧾 Full response:", resData);
             const capturedCoupons = resData.data?.coupons || [];
 
             if (capturedCoupons.length === 0) {
@@ -123,7 +120,7 @@ export function run() {
     let successCount = 0;
     const pausePoints = generatePausePoints(coupons.length);
     console.log("📌 Long pause at indexes:", pausePoints);
-
+    // TODO: find the clipped count and make that the length
     for (let i = 0; i < coupons.length; i++) {
       const coupon = coupons[i];
       const body = JSON.stringify({
