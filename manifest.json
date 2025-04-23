@@ -1,33 +1,77 @@
 {
-  "manifest_version": 3,
-  "name": "ReturnOfTheClippy",
-  "version": "0.1.0",
-  "description": "Clippin Coupons to ReCoup Dollars.",
-  "host_permissions": ["<all_urls>"
-  ],
-  "action": {
-    "default_popup": "clip_home.html",
-    "default_icon": "coupon-icon.png"
-  },
+    "manifest_version": 3,
+    "name": "ReturnOfTheClippy",
+    "version": "0.1.0",
+    "description": "Clippin Coupons to ReCoup Dollars.",
   "permissions": [
     "activeTab",
     "scripting",
     "storage",
-    "cookies"
+    "cookies",
+    "webRequest",
+    "tabs"
   ],
-  "background": {
-    "service_worker": "background.js"
-  },
+    "action": {
+        "default_popup": "clip_home.html",
+        "default_icon": "coupon-icon.png"
+    }, "background": {
+        "service_worker": "background.js"
+      },
+  "host_permissions": [
+  "https://www.kroger.com/*",
+  "https://www.ralphs.com/*",
+  "https://www.dillons.com/*",
+  "https://www.smithsfoodanddrug.com/*",
+  "https://www.kingsoopers.com/*",
+  "https://www.frysfood.com/*",
+  "https://www.qfc.com/*",
+  "https://www.citymarket.com/*",
+  "https://www.jaycfoods.com/*",
+  "https://www.pay-less.com/*",
+  "https://www.bakersplus.com/*",
+  "https://www.gerbes.com/*",
+  "https://www.harristeeter.com/*",
+  "https://www.picknsave.com/*",
+  "https://www.metromarket.net/*",
+  "https://www.marianos.com/*",
+    "https://www.safeway.com/*",
+    "https://jewelosco.com/*"
+],
   "content_scripts": [
     {
       "matches": [
-        "<all_urls>"
+
+        "https://www.kroger.com/savings/cl/coupons*",
+        "https://www.ralphs.com/savings/cl/coupons*",
+        "https://www.dillons.com/savings/cl/coupons*",
+        "https://www.smithsfoodanddrug.com/savings/cl/coupons*",
+        "https://www.kingsoopers.com/savings/cl/coupons*",
+        "https://www.frysfood.com/savings/cl/coupons*",
+        "https://www.qfc.com/savings/cl/coupons*",
+        "https://www.citymarket.com/savings/cl/coupons*",
+        "https://www.jaycfoods.com/savings/cl/coupons*",
+        "https://www.pay-less.com/savings/cl/coupons*",
+        "https://www.bakersplus.com/savings/cl/coupons*",
+        "https://www.gerbes.com/savings/cl/coupons*",
+        "https://www.harristeeter.com/savings/cl/coupons*",
+        "https://www.picknsave.com/savings/cl/coupons*",
+        "https://www.metromarket.net/savings/cl/coupons*",
+        "https://www.marianos.com/savings/cl/coupons*",
+        "https://www.safeway.com/foru/coupons*",
+        "https://jewelosco.com/foru/coupons*"
       ],
       "js": [
         "albertsons/safeway.js",
         "albertsons/jewel.js",
         "content.js"
-      ]
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["content/kroger/*.js"],
+      "matches": ["<all_urls>"]
     }
   ]
 }

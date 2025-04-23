@@ -1,23 +1,37 @@
-/**
- * Content script: Runs in the context of the web page.
- * Listens for messages from the popup to interact with the page's
- * localStorage and document.cookie (non-HttpOnly cookies).
- */
+(async () => {
+  const hostname = location.hostname;
+
+  const krogerDomains = [
+    "www.kroger.com", "www.ralphs.com", "www.dillons.com",
+    "www.smithsfoodanddrug.com", "www.kingsoopers.com",
+    "www.frysfood.com", "www.qfc.com", "www.citymarket.com",
+    "www.owensmarket.com", "www.jaycfoods.com", "www.pay-less.com",
+    "www.bakersplus.com", "www.gerbes.com", "www.harristeeter.com",
+    "www.picknsave.com", "www.metromarket.net", "www.marianos.com"
+  ];
+
+  if (krogerDomains.includes(hostname)) {
+    const module = await import(chrome.runtime.getURL("content/kroger/index.js"));
+    module.run(); // ← this runs inject logic
+  } else {
+    console.warn("🚫 No handler for this site.");
+  }
+})();
 
 // Use a flag to prevent multiple logs if the script gets injected multiple times unnecessarily.
 if (typeof window.pageInteractorContentScriptInjected === 'undefined') {
     window.pageInteractorContentScriptInjected = true;
     console.log("Page Interactor Content Script Loaded and Initialized.");
-  
+
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       console.log("Content Script received message:", request, "from sender:", sender);
-  
+
       let responseData = null;
       let error = null;
-  
+
       try {
         // --- Action Handlers ---
-  
+
         // == LocalStorage Actions ==
         if (request.action === "getLocalStorage") {
           if (request.key) {
@@ -52,7 +66,7 @@ if (typeof window.pageInteractorContentScriptInjected === 'undefined') {
           window.localStorage.clear();
           responseData = `Cleared all page localStorage.`;
         }
-  
+
         // == Document Cookie Action ==
         else if (request.action === "getDocumentCookie") {
           console.log("Content Script: Getting document.cookie.");
@@ -128,16 +142,16 @@ if (typeof window.pageInteractorContentScriptInjected === 'undefined') {
         error = `Content Script Execution Error: ${e.message}`;
         console.error(error, e);
       }
-  
+
       // Send the response back to the caller (the popup script)
       console.log("Content Script: Sending response:", { data: responseData, error: error });
       sendResponse({ data: responseData, error: error });
-  
+
       // Return true to indicate potential asynchronous response, although all actions here
       // are currently synchronous. It's good practice for consistency with background script.
       return true;
     });
-  
+
   } else {
     // This can happen if executeScript is called again on the same frame before page reload.
     console.log("Page Interactor Content Script already injected.");
