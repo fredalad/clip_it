@@ -87,7 +87,7 @@ if (typeof window.pageInteractorContentScriptInjected === 'undefined') {
 
           return true; // Keep the message channel open for async
         } else if (request.action === "tryJewel") {
-          console.log("Content Script: trySafeway action triggered.");
+          console.log("Content Script: tryJewel action triggered.");
 
           (async () => {
             try {
@@ -106,10 +106,10 @@ if (typeof window.pageInteractorContentScriptInjected === 'undefined') {
                 clipResponse
               };
 
-              console.log("Content Script: Safeway flow complete:", responseData);
+              console.log("Content Script: Jewel flow complete:", responseData);
               sendResponse({ data: responseData, error: null });
             } catch (e) {
-              error = `trySafeway Error: ${e.message}`;
+              error = `tryJewel Error: ${e.message}`;
               console.error(error);
               sendResponse({ data: null, error });
             }

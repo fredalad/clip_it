@@ -7,59 +7,6 @@ flow:
 - async api request to clip [done]
 - exit and inform user (TODO)
 */
-const headers = {
-    'accept': 'application/json, text/plain, */*',
-    'accept-language': 'en-US,en;q=0.9',
-    'content-type': 'application/json',
-    'origin': 'https://www.safeway.com',
-    'referer': 'https://www.safeway.com/foru/coupons-deals.html',
-    'priority': 'u=1, i',
-    'sec-fetch-dest': 'empty',
-    'sec-fetch-mode': 'cors',
-    'sec-fetch-site': 'same-origin',
-    "x-swy_api_key": "emjou",
-    "x-swy_banner": "safeway",
-    "x-swy_version": "1.0",
-    //chrome specific
-    'sec-ch-ua': '"Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135",',
-    'sec-ch-ua-mobile': '?0',
-
-    //grab the others below
-    'cookie': '', // see composition
-    'swy_sso_token': '',  // Cookies -> SWY_SHARED_SESSION -> accessToken
-    'x-swyconsumerdirectorypro':'' // Cookies -> SWY_SHARED_SESSION -> accessToken
-};
-
-/*
-cookie composition: -- needs to be pulled from the original cookie
- */
-const cookieCompositionNames = [
-    "ACI_S_ECommBanner",
-    "ACI_S_ECommReInit",
-    "ACI_S_ECommSignInCount",
-    "ACI_S_SAFEWAY_KMSI",
-    "ACI_S_abs_previouslogin",
-    "OptanonAlertBoxClosed",
-    "OptanonConsent",
-    "SAFEWAY_MODAL_LINK",
-    "SAFEWAY_RE_SIGN_IN",
-    "SWY_SHARED_PII_SESSION_INFO",
-    "SWY_SHARED_SESSION",
-    "SWY_SHARED_SESSION_INFO",
-    "SWY_SYND_USER_INFO",
-    "__eoi",
-    "absVisitorId",
-    "akacd_PR-bg-www-prod-safeway",
-    "at_check",
-    "incap_ses_1327_1610353",
-    "mbox",
-    "nlbi_1610353",
-    "nlbi_1610353_2147483392",
-    "reese84",
-    "ttcsid",
-    "ttcsid_CEUU933C77UA1PN5K8JG",
-    "visid_incap_1610353"
-];
 
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -77,10 +24,8 @@ window.parseCoupons = async function (){
     console.log(`parseCoupons Script: Getting localStorage item for key: abJ4uCoupons`);
     let storedCouponDataString = window.localStorage.getItem('abJ4uCoupons');
     let storedCouponData = JSON.parse(storedCouponDataString);
-    console.log(`storedCouponData = ${storedCouponData}`);
     let unclippedCoupons = {}
     let unclippedCouponKeys = [];
-    console.log(typeof storedCouponData);
     try {
         const objCouponsKeys = Object.keys(storedCouponData.objCoupons);
         const arrClippedCoupons = storedCouponData.arrClippedCoupons;
@@ -94,12 +39,10 @@ window.parseCoupons = async function (){
         console.error("Error while filtering unclipped coupons:", error);
         // Optionally handle fallback logic here
     }
-    console.log(`unclippedCoupons => ${JSON.stringify(unclippedCoupons)} `);
     return unclippedCoupons;
 }
 
 window.grabCookie = async function (){
-    console.log(`cookie -> ${document.cookie}`)
     cookieStr = document.cookie
     const cookieObj = {};
     const pairs = cookieStr.split(';');
@@ -117,12 +60,63 @@ window.grabCookie = async function (){
             cookieObj[key] = val;
         }
     }
-    console.log(` parsed cookie cookieObj -> ${JSON.stringify(cookieObj)}`);
 
     return cookieObj;
 }
 
 window.buildHeaderFromCookie = async function (cookieObj){
+    const headers = {
+        'accept': 'application/json, text/plain, */*',
+        'accept-language': 'en-US,en;q=0.9',
+        'content-type': 'application/json',
+        'origin': 'https://www.safeway.com',
+        'referer': 'https://www.safeway.com/foru/coupons-deals.html',
+        'priority': 'u=1, i',
+        'sec-fetch-dest': 'empty',
+        'sec-fetch-mode': 'cors',
+        'sec-fetch-site': 'same-origin',
+        "x-swy_api_key": "emjou",
+        "x-swy_banner": "safeway",
+        "x-swy_version": "1.0",
+        //chrome specific
+        'sec-ch-ua': '"Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135",',
+        'sec-ch-ua-mobile': '?0',
+
+        //grab the others below
+        'cookie': '', // see composition
+        'swy_sso_token': '',  // Cookies -> SWY_SHARED_SESSION -> accessToken
+        'x-swyconsumerdirectorypro':'' // Cookies -> SWY_SHARED_SESSION -> accessToken
+    };
+    /*
+cookie composition: -- needs to be pulled from the original cookie
+ */
+    const cookieCompositionNames = [
+        "ACI_S_ECommBanner",
+        "ACI_S_ECommReInit",
+        "ACI_S_ECommSignInCount",
+        "ACI_S_SAFEWAY_KMSI",
+        "ACI_S_abs_previouslogin",
+        "OptanonAlertBoxClosed",
+        "OptanonConsent",
+        "SAFEWAY_MODAL_LINK",
+        "SAFEWAY_RE_SIGN_IN",
+        "SWY_SHARED_PII_SESSION_INFO",
+        "SWY_SHARED_SESSION",
+        "SWY_SHARED_SESSION_INFO",
+        "SWY_SYND_USER_INFO",
+        "__eoi",
+        "absVisitorId",
+        "akacd_PR-bg-www-prod-safeway",
+        "at_check",
+        "incap_ses_1327_1610353",
+        "mbox",
+        "nlbi_1610353",
+        "nlbi_1610353_2147483392",
+        "reese84",
+        "ttcsid",
+        "ttcsid_CEUU933C77UA1PN5K8JG",
+        "visid_incap_1610353"
+    ];
     //build cookie header -- need composition above and 'swy_sso_token' & 'x-swyconsumerdirectorypro' from Cookies -> SWY_SHARED_SESSION -> accessToken
     const cookieHeaderString = Object.entries(cookieObj)
         .filter(([key]) => cookieCompositionNames.includes(key))
@@ -153,7 +147,6 @@ window.sendClipRequest = async function (couponObj, builtHeader){
             { clipType: "L", itemId: id, itemType: coupon.offerPgm }
         ]
     }));
-    console.log(`bodyObjects => ${JSON.stringify(bodyObjects)}`);
     for (const [index, obj] of bodyObjects.entries()) {
         console.log(`clipping coupon number ${index} - for this item object: ${JSON.stringify(obj)}`);
         if ((index + 1) % 5 === 0) {
