@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Mariano's Coupon Button",
+  "name": "Clip it Club",
   "version": "1.1",
-  "description": "Injects a button and logs coupon API requests.",
+  "description": "Automatically clips coupons from grocery stores",
   "permissions": [
     "webRequest",
     "scripting",
@@ -30,22 +30,22 @@
   "content_scripts": [
     {
       "matches": [
-        "https://www.kroger.com/savings/cl/coupons*",
-        "https://www.ralphs.com/savings/cl/coupons*",
-        "https://www.dillons.com/savings/cl/coupons*",
-        "https://www.smithsfoodanddrug.com/savings/cl/coupons*",
-        "https://www.kingsoopers.com/savings/cl/coupons*",
-        "https://www.frysfood.com/savings/cl/coupons*",
-        "https://www.qfc.com/savings/cl/coupons*",
-        "https://www.citymarket.com/savings/cl/coupons*",
-        "https://www.jaycfoods.com/savings/cl/coupons*",
-        "https://www.pay-less.com/savings/cl/coupons*",
-        "https://www.bakersplus.com/savings/cl/coupons*",
-        "https://www.gerbes.com/savings/cl/coupons*",
-        "https://www.harristeeter.com/savings/cl/coupons*",
-        "https://www.picknsave.com/savings/cl/coupons*",
-        "https://www.metromarket.net/savings/cl/coupons*",
-        "https://www.marianos.com/savings/cl/coupons*"
+        "https://www.kroger.com/savings/cl/*",
+        "https://www.ralphs.com/savings/cl/*",
+        "https://www.dillons.com/savings/cl/*",
+        "https://www.smithsfoodanddrug.com/savings/cl/*",
+        "https://www.kingsoopers.com/savings/cl/*",
+        "https://www.frysfood.com/savings/cl/*",
+        "https://www.qfc.com/savings/cl/*",
+        "https://www.citymarket.com/savings/cl/*",
+        "https://www.jaycfoods.com/savings/cl/*",
+        "https://www.pay-less.com/savings/cl/*",
+        "https://www.bakersplus.com/savings/cl/*",
+        "https://www.gerbes.com/savings/cl/*",
+        "https://www.harristeeter.com/savings/cl/*",
+        "https://www.picknsave.com/savings/cl/*",
+        "https://www.metromarket.net/savings/cl/*",
+        "https://www.marianos.com/savings/cl/*"
       ],
       "js": ["content.js"],
       "run_at": "document_idle"

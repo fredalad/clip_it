@@ -23,7 +23,7 @@ const headerStore = {}; // Store captured headers per tabId
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.status === "complete" && tab.url) {
     const isCouponPage = couponSites.some(site =>
-      tab.url.includes(site) && tab.url.includes("/savings/cl/coupons")
+      tab.url.includes(site) && (tab.url.includes("/savings/cl/coupons") || tab.url.includes("/savings/cl/mycoupons"))
     );
 
     if (isCouponPage) {
