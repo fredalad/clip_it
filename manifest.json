@@ -1,8 +1,8 @@
 {
-    "manifest_version": 3,
-    "name": "ReturnOfTheClippy",
-    "version": "0.1.0",
-    "description": "Clippin Coupons to ReCoup Dollars.",
+  "manifest_version": 3,
+  "name": "ReturnOfTheClippy",
+  "version": "0.1.0",
+  "description": "Clippin Coupons to ReCoup Dollars.",
   "permissions": [
     "activeTab",
     "scripting",
@@ -11,36 +11,36 @@
     "webRequest",
     "tabs"
   ],
-    "action": {
-        "default_popup": "clip_home.html",
-        "default_icon": "coupon-icon.png"
-    }, "background": {
-        "service_worker": "background.js"
-      },
+  "action": {
+    "default_popup": "clip_home.html",
+    "default_icon": "coupon-icon.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
   "host_permissions": [
-  "https://www.kroger.com/*",
-  "https://www.ralphs.com/*",
-  "https://www.dillons.com/*",
-  "https://www.smithsfoodanddrug.com/*",
-  "https://www.kingsoopers.com/*",
-  "https://www.frysfood.com/*",
-  "https://www.qfc.com/*",
-  "https://www.citymarket.com/*",
-  "https://www.jaycfoods.com/*",
-  "https://www.pay-less.com/*",
-  "https://www.bakersplus.com/*",
-  "https://www.gerbes.com/*",
-  "https://www.harristeeter.com/*",
-  "https://www.picknsave.com/*",
-  "https://www.metromarket.net/*",
-  "https://www.marianos.com/*",
+    "https://www.kroger.com/*",
+    "https://www.ralphs.com/*",
+    "https://www.dillons.com/*",
+    "https://www.smithsfoodanddrug.com/*",
+    "https://www.kingsoopers.com/*",
+    "https://www.frysfood.com/*",
+    "https://www.qfc.com/*",
+    "https://www.citymarket.com/*",
+    "https://www.jaycfoods.com/*",
+    "https://www.pay-less.com/*",
+    "https://www.bakersplus.com/*",
+    "https://www.gerbes.com/*",
+    "https://www.harristeeter.com/*",
+    "https://www.picknsave.com/*",
+    "https://www.metromarket.net/*",
+    "https://www.marianos.com/*",
     "https://www.safeway.com/*",
     "https://jewelosco.com/*"
-],
+  ],
   "content_scripts": [
     {
       "matches": [
-
         "https://www.kroger.com/savings/cl/coupons*",
         "https://www.ralphs.com/savings/cl/coupons*",
         "https://www.dillons.com/savings/cl/coupons*",
@@ -70,8 +70,12 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["content/kroger/*.js"],
-      "matches": ["<all_urls>"]
+      "resources": [
+        "content/kroger/*.js"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
     }
   ]
 }
