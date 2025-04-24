@@ -36,7 +36,7 @@
     "https://www.metromarket.net/*",
     "https://www.marianos.com/*",
     "https://www.safeway.com/*",
-    "https://jewelosco.com/*"
+    "https://www.jewelosco.com/*"
   ],
   "content_scripts": [
     {
@@ -58,7 +58,7 @@
         "https://www.metromarket.net/savings/cl/coupons*",
         "https://www.marianos.com/savings/cl/coupons*",
         "https://www.safeway.com/foru/coupons*",
-        "https://jewelosco.com/foru/coupons*"
+        "https://www.jewelosco.com/foru/coupons*"
       ],
       "js": [
         "albertsons/safeway.js",

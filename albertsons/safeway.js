@@ -17,7 +17,7 @@ window.navigateToSafewayCoupons = async function (){
         if (tabs && tabs.length > 0) {
           chrome.tabs.update(tabs[0].id, { url: targetURL });
         }
-      });    
+      });
 }
 
 window.parseCoupons = async function (){
