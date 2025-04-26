@@ -1,14 +1,23 @@
 {
   "manifest_version": 3,
-  "name": "Mariano's Coupon Button",
-  "version": "1.1",
-  "description": "Injects a button and logs coupon API requests.",
+  "name": "ReturnOfTheClippy",
+  "version": "0.1.0",
+  "description": "Clippin Coupons to ReCoup Dollars.",
   "permissions": [
-    "webRequest",
+    "activeTab",
     "scripting",
-    "tabs",
-    "cookies"
+    "storage",
+    "cookies",
+    "webRequest",
+    "tabs"
   ],
+  "action": {
+    "default_popup": "clip_home.html",
+    "default_icon": "coupon-icon.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
   "host_permissions": [
     "https://www.kroger.com/*",
     "https://www.ralphs.com/*",
@@ -25,7 +34,9 @@
     "https://www.harristeeter.com/*",
     "https://www.picknsave.com/*",
     "https://www.metromarket.net/*",
-    "https://www.marianos.com/*"
+    "https://www.marianos.com/*",
+    "https://www.safeway.com/*",
+    "https://www.jewelosco.com/*"
   ],
   "content_scripts": [
     {
@@ -45,19 +56,26 @@
         "https://www.harristeeter.com/savings/cl/coupons*",
         "https://www.picknsave.com/savings/cl/coupons*",
         "https://www.metromarket.net/savings/cl/coupons*",
-        "https://www.marianos.com/savings/cl/coupons*"
+        "https://www.marianos.com/savings/cl/coupons*",
+        "https://www.safeway.com/foru/coupons*",
+        "https://www.jewelosco.com/foru/coupons*"
       ],
-      "js": ["content.js"],
+      "js": [
+        "albertsons/safeway.js",
+        "albertsons/jewel.js",
+        "content.js"
+      ],
       "run_at": "document_idle"
     }
   ],
-  "background": {
-    "service_worker": "background.js"
-  },
   "web_accessible_resources": [
     {
-      "resources": ["content/kroger/*.js"],
-      "matches": ["<all_urls>"]
+      "resources": [
+        "content/kroger/*.js"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
     }
   ]
 }
