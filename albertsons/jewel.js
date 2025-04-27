@@ -1,5 +1,7 @@
 // SMS number https://smstome.com/usa/phone/12174093168/sms/9236
-window.buildJewelOscoHeaderFromCookie = async function (cookieObj, additonalCookie) {
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+export function buildJewelOscoHeaderFromCookie(cookieObj, additonalCookie) {
     let headers = {
         "accept": "application/json, text/plain, */*",
         "accept-language": "en-US,en;q=0.9",
@@ -46,7 +48,7 @@ window.buildJewelOscoHeaderFromCookie = async function (cookieObj, additonalCook
         "OptanonConsent",
     ]
     //update headers
-    cookieObj['SWY_SHARED_SESSION'] = await getCookieItemByName('SWY_SHARED_SESSION',additonalCookie)
+    cookieObj['SWY_SHARED_SESSION'] = getCookieItemByName('SWY_SHARED_SESSION',additonalCookie)
     headers.cookie = Object.entries(cookieObj)
         .filter(([key]) => cookieCompositionNames.includes(key))
         .map(([key, value]) => {
@@ -63,8 +65,7 @@ window.buildJewelOscoHeaderFromCookie = async function (cookieObj, additonalCook
     return headers;
 }
 
-window.clipJewelOsco = async function (headers, couponObj) {
-        let storedCouponDataString = window.localStorage.getItem('abJ4uCoupons');
+export function clipJewelOsco(headers, couponObj, storedCouponDataString) {
         let storedCouponData = JSON.parse(storedCouponDataString);
         let storeId = storedCouponData.storeId;
 
@@ -79,10 +80,10 @@ window.clipJewelOsco = async function (headers, couponObj) {
         for (const [index, body] of bodyObjects.entries()) {
             if ((index + 1) % 5 === 0) {
                 console.log(`Pausing after ${index + 1} items...`);
-                await sleep(1000); // 1 second pause
+                sleep(1000); // 1 second pause
             }
             try {
-                const res = await fetch(url, {
+                const res = fetch(url, {
                     method: 'POST',
                     headers,
                     body: JSON.stringify(body),
@@ -90,7 +91,7 @@ window.clipJewelOsco = async function (headers, couponObj) {
                 });
 
                 if (!res.ok) throw new Error(`Status ${res.status}: ${res.statusText}`);
-                const data = await res.json();
+                const data =  res.json();
                 console.log('Clip response:', data);
                 return data;
             } catch (err) {
@@ -99,23 +100,7 @@ window.clipJewelOsco = async function (headers, couponObj) {
         }
 }
 
-window.grabAdditionalCookieFieldsToAddToCookieObjJewel = async function (cookieObj) {
-    return new Promise((resolve, reject) => {
-        chrome.runtime.sendMessage({ action: "getCookies"}, response => {
-            if (chrome.runtime.lastError) {
-                return reject(chrome.runtime.lastError);
-            }
-            if (response) {
-                console.log(`response ------------ > ${response}`);
-                resolve(response);
-            } else {
-
-                reject(new Error("Unable to grab cookies"));
-            }
-        });
-    });
-}
-async function getCookieItemByName(name, cookieResponse) {
+function getCookieItemByName(name, cookieResponse) {
     let data = cookieResponse.data;
     const sessionCookie = data.find(
         item => item.name === name

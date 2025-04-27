@@ -8,25 +8,20 @@ flow:
 - exit and inform user (TODO)
 */
 
-const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
-
-window.navigateToSafewayCoupons = async function (){
-    const targetURL = "https://www.safeway.com/foru/coupons-deals.html";
-    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-        if (tabs && tabs.length > 0) {
-          chrome.tabs.update(tabs[0].id, { url: targetURL });
-        }
-      });
+// const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+function sleepSynchronous(ms) {
+    const start = Date.now();
+    while (Date.now() - start < ms) {}
 }
 
-window.parseCoupons = async function (){
+export function parseCoupons(storedCouponDataString){
     console.log(`parseCoupons Script: Getting localStorage item for key: abJ4uCoupons`);
-    let storedCouponDataString = window.localStorage.getItem('abJ4uCoupons');
+    try {
+
+        // let storedCouponDataString = window.localStorage.getItem('abJ4uCoupons');
     let storedCouponData = JSON.parse(storedCouponDataString);
     let unclippedCoupons = {}
     let unclippedCouponKeys = [];
-    try {
         const objCouponsKeys = Object.keys(storedCouponData.objCoupons);
         const arrClippedCoupons = storedCouponData.arrClippedCoupons;
 
@@ -35,15 +30,16 @@ window.parseCoupons = async function (){
         unclippedCouponKeys.map((couponKey, index) => {
           unclippedCoupons[couponKey] = storedCouponData.objCoupons[couponKey];
         });
+        return unclippedCoupons;
     } catch (error) {
         console.error("Error while filtering unclipped coupons:", error);
         // Optionally handle fallback logic here
     }
-    return unclippedCoupons;
+    return {}
 }
 
-window.grabCookie = async function (){
-    cookieStr = document.cookie
+export function grabCookie(cookieStr){
+    // const cookieStr = document.cookie
     const cookieObj = {};
     const pairs = cookieStr.split(';');
     for (let pair of pairs) {
@@ -64,7 +60,7 @@ window.grabCookie = async function (){
     return cookieObj;
 }
 
-window.buildHeaderFromCookie = async function (cookieObj){
+export function buildHeaderFromCookie(cookieObj){
     const headers = {
         'accept': 'application/json, text/plain, */*',
         'accept-language': 'en-US,en;q=0.9',
@@ -136,7 +132,7 @@ cookie composition: -- needs to be pulled from the original cookie
     return headers;
 }
 
-window.sendClipRequest = async function (couponObj, builtHeader){
+export function sendClipRequest(couponObj, builtHeader){
     let storedCouponDataString = window.localStorage.getItem('abJ4uCoupons');
     let storedCouponData = JSON.parse(storedCouponDataString);
     let storeId = storedCouponData.storeId;
@@ -151,7 +147,7 @@ window.sendClipRequest = async function (couponObj, builtHeader){
         console.log(`clipping coupon number ${index} - for this item object: ${JSON.stringify(obj)}`);
         if ((index + 1) % 5 === 0) {
             console.log(`Pausing after ${index + 1} items...`);
-            await sleep(1000); // 1 second pause
+            sleepSynchronous(1000); // 1 second pause
         }
         fetch(clipUrl, {
             method: 'POST',

@@ -16,7 +16,8 @@
     "default_icon": "coupon-icon.png"
   },
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js",
+    "type": "module"
   },
   "host_permissions": [
     "https://www.kroger.com/*",

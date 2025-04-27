@@ -1,3 +1,5 @@
+import {buildJewelOscoHeaderFromCookie, clipJewelOsco} from './albertsons/jewel.js'
+import {buildHeaderFromCookie, grabCookie, parseCoupons, sendClipRequest} from './albertsons/safeway.js'
 const couponSites = [
   "marianos.com",
   "kroger.com",
@@ -19,6 +21,15 @@ const couponSites = [
 
 const headerStore = {}; // Store captured headers per tabId
 
+function sendStatusToContent(message, type = 'info') {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (tabs && tabs.length > 0) {
+      chrome.tabs.sendMessage(tabs[0].id, { action: 'updateStatus', message: message, type: type });
+    } else {
+      console.log("No active tab to send status update to.");
+    }
+  });
+}
 /**
  * Listener for messages sent from other parts of the extension (e.g., popup).
  * Handles requests that need background capabilities, like accessing the chrome.cookies API.
@@ -70,7 +81,46 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     // If you don't return true, the message channel might close before the callback runs.
     return true;
   }
-});
+  else if (request.action === "tryJewel") {
+    console.log(`request data -> ${JSON.stringify(request.data)}`);
+    const localStorage = request.data['localStorage'] || null;
+    const documentCookie = request.data['documentCookie'] || null;
+    const additionalCookies = request.data['additionalCookies'] || null;
+
+      try {
+        const coupons =  parseCoupons(localStorage);
+        console.log(`coupons -> ${JSON.stringify(coupons)}`);
+        const cookies = grabCookie(documentCookie);
+        console.log(`cookies -> ${JSON.stringify(cookies)}`);
+        console.log("Additional cookie results:", additionalCookies);
+        const builtHeader = buildJewelOscoHeaderFromCookie(cookies, additionalCookies);
+        console.log(`builtHeader: ${JSON.stringify(builtHeader)}`);
+        sendStatusToContent("clipping the coupons")
+        const clipResponse = clipJewelOsco(builtHeader, coupons, localStorage);
+
+        let responseData = {
+          coupons,
+          cookies,
+          builtHeader,
+          clipResponse
+        };
+
+        console.log("Content Script: Jewel flow complete:", responseData);
+        sendResponse({ data: responseData, error: null });
+      } catch (e) {
+        let error = `tryJewel Error: ${e.message}`;
+        console.error(error);
+        sendResponse({ data: null, error });
+      }
+    sendStatusToContent("Coupon Clipping Complete!")
+    return true;
+  } else if (request.action === "trySafeway") {
+    const response = trySafewayFunctions();
+    sendResponse(response);
+  }
+  return true;
+
+  });
 
 // 🔁 Inject scripts when a supported coupon page loads
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
