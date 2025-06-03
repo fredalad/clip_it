@@ -53,6 +53,7 @@ export function run() {
   }
   // TODO: Make button a drop down by type (food, cleaning, tools, etc...)
   function injectButton(config) {
+    console.log('alskdjfklasdjflkjlasdjfkjlk')
     const targetSection = document.evaluate(
       config.xpath,
       document,
@@ -104,7 +105,27 @@ export function run() {
               return;
             }
 
-            const unclippedCoupons = capturedCoupons.filter(c => c.status === "unclipped").slice(0, 1);
+            let alreadyClipped = 0;
+            const allStats = Array.from(document.querySelectorAll('.text-center.sm\\:ml-8'));
+
+            for (const stat of allStats) {
+              const label = stat.querySelector('.DashboardTile--title')?.textContent?.trim();
+              if (label === "Coupons Clipped") {
+                const countText = stat.querySelector('.text-accent-more-prominent.underline')?.textContent?.trim();
+                const count = parseInt(countText);
+                if (!isNaN(count)) {
+                  alreadyClipped = count;
+                }
+                break;
+              }
+            }
+
+            const remainingToClip = Math.max(0, 200 - alreadyClipped);
+
+            const unclippedCoupons = capturedCoupons
+              .filter(c => c.status === "unclipped")
+              .slice(0, remainingToClip);
+
             updateStatusBox(`🚀 Starting to clip ${unclippedCoupons.length} coupons (max 200)...`);
             throttleClipping(unclippedCoupons, headers, config);
           })
@@ -120,7 +141,6 @@ export function run() {
     let successCount = 0;
     const pausePoints = generatePausePoints(coupons.length);
     console.log("📌 Long pause at indexes:", pausePoints);
-    // TODO: find the clipped count and make that the length
     for (let i = 0; i < coupons.length; i++) {
       const coupon = coupons[i];
       const body = JSON.stringify({
