@@ -82,7 +82,7 @@ window.SITE_CONFIG = {
   "www.marianos.com": {
     name: "Mariano’s",
     apiBase: "https://www.marianos.com",
-    xpath: "/html/body/div[1]/div/div[8]/div[1]/main/section/div/section[2]"
+    xpath: "/html/body/div[1]/div/div[6]/div[1]/main/section/div/section[2]/section"
   }
 };
 

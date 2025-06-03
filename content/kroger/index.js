@@ -53,6 +53,7 @@ export function run() {
   }
   // TODO: Make button a drop down by type (food, cleaning, tools, etc...)
   function injectButton(config) {
+    console.log('alskdjfklasdjflkjlasdjfkjlk')
     const targetSection = document.evaluate(
       config.xpath,
       document,
